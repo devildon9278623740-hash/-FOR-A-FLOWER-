@@ -22,7 +22,7 @@ body{
   text-align:center;
 }
 
-/* Floating petals */
+/* petals */
 .petal{
   position:absolute;
   width:14px;
@@ -44,29 +44,27 @@ body{
   z-index:10;
 }
 
-/* Top GIF */
+/* top gif */
 #topGif{
   width:120px;
   margin:0 auto 25px;
-  display:block;
 }
 
-/* Text */
+/* TEXT FIX HERE */
 #text{
   font-size:20px;
-  line-height:1.9;
-  white-space:pre-line;
+  line-height:2;
+  white-space:pre-wrap;   /* IMPORTANT */
   opacity:0;
 }
 
-/* Ending */
 #end{
   margin-top:30px;
   font-size:12px;
   opacity:0.6;
 }
 
-/* Music button */
+/* music button */
 #playMusic{
   position:fixed;
   top:15px;
@@ -84,13 +82,12 @@ body{
 
 <body>
 
-<!-- Music -->
 <audio id="music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 <button id="playMusic">Play Music</button>
 
-<!-- Floating petals -->
+<!-- petals -->
 <script>
 for(let i=0;i<30;i++){
   let p=document.createElement("div");
@@ -103,34 +100,39 @@ for(let i=0;i<30;i++){
 </script>
 
 <div class="main">
-  <!-- GIF AT TOP -->
-  <img id="topGif" src="sparkle.gif" alt="sparkle gif">
-
-  <!-- Text -->
+  <img id="topGif" src="sparkle.gif" alt="sparkle">
   <div id="text"></div>
-
-  <!-- Ending -->
   <div id="end">made by HOTOKE for JASMINE</div>
 </div>
 
 <script>
-const paragraph = `Khuda ne jab tujhe fursat mei bnaya hoga
-Ke Khuda ne jab tujhe fursat mei bnaya hoga
-ek surur sa uske dil mei bhi chhaya hoga
-teri nazaron mei samandar
-aadao mei puri kayanat
-ye nazare bhar ke sach kheta hu
-tujhe dharti pe bhejne se phele
-us khuda ka bhi imaan dhagmagaya hoga`;
+const lines = [
+  "Khuda ne jab tujhe fursat mei bnaya hoga",
+  "Ke Khuda ne jab tujhe fursat mei bnaya hoga",
+  "ek surur sa uske dil mei bhi chhaya hoga",
+  "teri nazaron mei samandar",
+  "aadao mei puri kayanat",
+  "ye nazare bhar ke sach kheta hu",
+  "tujhe dharti pe bhejne se phele",
+  "us khuda ka bhi imaan dhagmagaya hoga"
+];
 
 const textEl = document.getElementById("text");
-let i = 0;
+let line = 0;
+let char = 0;
 
 function typeEffect(){
-  if(i < paragraph.length){
-    textEl.innerText += paragraph.charAt(i);
-    i++;
-    setTimeout(typeEffect, 28);
+  if(line < lines.length){
+    if(char < lines[line].length){
+      textEl.innerHTML += lines[line].charAt(char);
+      char++;
+      setTimeout(typeEffect, 35);
+    } else {
+      textEl.innerHTML += "\n\n";   // SPACE BETWEEN LINES
+      line++;
+      char = 0;
+      setTimeout(typeEffect, 400);
+    }
   }
 }
 
@@ -139,7 +141,7 @@ window.onload = () => {
   typeEffect();
 };
 
-// Music button
+// music
 const music = document.getElementById("music");
 document.getElementById("playMusic").onclick = () => {
   music.play();
