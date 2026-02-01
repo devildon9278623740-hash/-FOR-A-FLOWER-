@@ -48,7 +48,9 @@ body{
     font-family:'Playfair Display', serif;
     font-size:22px;
     line-height:1.5;
-    min-height:60px;
+    min-height:80px;
+    opacity:0;
+    transition:opacity 1s;
 }
 
 #photo{
@@ -67,30 +69,15 @@ body{
     opacity:0.6;
     font-style:italic;
 }
-
-/* Music button */
-#musicBtn{
-    position:fixed;
-    top:15px;
-    right:15px;
-    background:rgba(255,182,193,0.7);
-    border:none;
-    padding:8px 12px;
-    border-radius:20px;
-    cursor:pointer;
-    z-index:20;
-    font-size:14px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- Music -->
+<!-- 🎶 Music -->
 <audio id="music" autoplay loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
-<button id="musicBtn" onclick="toggleMusic()">Pause Music</button>
 
 <!-- Floating petals -->
 <script>
@@ -104,7 +91,7 @@ for(let i=0;i<30;i++){
 }
 </script>
 
-<div class="main" onclick="next()">
+<div class="main">
     <div id="text"></div>
     <img id="photo" src="her.jpg" alt="Her Photo">
     <div id="end">made by HOTOKE for JASMINE</div>
@@ -122,16 +109,17 @@ const lines = [
   "I watch quietly, admiring a beauty that feels sacred."
 ];
 
-let i = 0;
-const text = document.getElementById("text");
-const photo = document.getElementById("photo");
-const end = document.getElementById("end");
+let i=0;
+const text=document.getElementById("text");
+const photo=document.getElementById("photo");
+const end=document.getElementById("end");
 
 // Typing effect
 function typeLine(line, callback){
     text.innerText='';
+    text.style.opacity=1;
     let j=0;
-    const interval = setInterval(()=>{
+    const interval=setInterval(()=>{
         text.innerText += line[j];
         j++;
         if(j>=line.length){
@@ -141,31 +129,25 @@ function typeLine(line, callback){
     },30);
 }
 
-function next(){
+// Auto-play phrases one by one
+function nextLine(){
     if(i<lines.length){
-        typeLine(lines[i], ()=>{i++;});
-    } else if(photo.style.display==='none'){
+        typeLine(lines[i],()=>{
+            i++;
+            setTimeout(nextLine,1500); // wait 1.5s then next line
+        });
+    } else {
+        // Show photo
         photo.style.display='block';
         photo.style.opacity=0;
-        setTimeout(()=>photo.style.opacity=1,100);
-    } else {
-        end.style.opacity=1;
+        setTimeout(()=>photo.style.opacity=1,500);
+        // Show ending text
+        setTimeout(()=>{end.style.opacity=1},800);
     }
 }
 
-// Scroll also triggers next
-window.addEventListener("wheel", next);
-
-// Auto start first line
-next();
-
-// Music toggle
-function toggleMusic(){
-    const music = document.getElementById('music');
-    const btn = document.getElementById('musicBtn');
-    if(music.paused){music.play(); btn.innerText='Pause Music';}
-    else{music.pause(); btn.innerText='Play Music';}
-}
+// Start automatically
+window.onload = ()=>nextLine();
 </script>
 
 </body>
