@@ -10,106 +10,110 @@
 <style>
 body{
     margin:0;
-    min-height:100vh;
-    background: radial-gradient(circle at top, #1b1b1f, #0a0a0d);
+    height:100vh;
+    background:#0b0b0f;
     display:flex;
     align-items:center;
     justify-content:center;
     font-family:'Inter', sans-serif;
     color:#f5f5f5;
+    overflow:hidden;
 }
 
-.container{
-    max-width:380px;
-    padding:25px;
+.main{
     text-align:center;
+    padding:30px;
+    max-width:380px;
+    animation: fade 1.5s ease;
 }
 
-.card{
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    border-radius:20px;
-    padding:35px 25px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    animation: fadeIn 2s ease;
-}
-
-h1{
+#text{
     font-family:'Playfair Display', serif;
-    font-size:28px;
-    margin-bottom:20px;
+    font-size:22px;
+    line-height:1.5;
+    opacity:0;
+    transition:opacity 1s;
 }
 
-.highlight{
-    color:#ffb6c1;
-}
-
-p{
-    font-size:14.5px;
-    line-height:1.7;
-    opacity:0.9;
-    margin-bottom:18px;
-}
-
-.photo{
+#photo{
     width:120px;
     height:120px;
     border-radius:50%;
     object-fit:cover;
-    margin:20px auto;
+    margin:25px auto 0;
+    display:none;
     border:2px solid rgba(255,182,193,0.6);
 }
 
-.end{
+#end{
     margin-top:25px;
     font-size:12px;
-    opacity:0.6;
+    opacity:0;
     font-style:italic;
 }
 
-@keyframes fadeIn{
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
+@keyframes fade{
+    from{opacity:0}
+    to{opacity:1}
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎶 Background Music -->
+<!-- 🎶 Music -->
 <audio autoplay loop>
-    <source src="music.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-    <div class="card">
-
-        <h1>Just Admiring <span class="highlight">You</span></h1>
-
-        <!-- 📸 Photo -->
-        <img src="her.jpg" class="photo" alt="Her photo">
-
-        <p>You don’t just look beautiful.<br>You feel like peace in human form.</p>
-
-        <p>Somewhere between your eyes and your smile,<br>the world slows down.</p>
-
-        <p>Your beauty isn’t loud.<br>It simply exists — and that’s enough.</p>
-
-        <p>The way you smile feels honest,<br>like something real slipped out.</p>
-
-        <p>You don’t try to be special,<br>and that’s what makes you unforgettable.</p>
-
-        <p>Even silence looks better<br>when you’re the one standing in it.</p>
-
-        <p>I admire you quietly,<br>the way people admire stars at night.</p>
-
-        <!-- ✨ Ending Text -->
-        <div class="end">
-            made by <span class="highlight">HOTOKE</span> for <span class="highlight">JASMINE</span>
-        </div>
-
-    </div>
+<div class="main" onclick="next()">
+    <div id="text"></div>
+    <img id="photo" src="her.jpg">
+    <div id="end">made by HOTOKE for JASMINE</div>
 </div>
+
+<script>
+const lines = [
+  "I don’t admire you loudly.",
+  "I admire you quietly — the way nights admire stars.",
+  "Your beauty isn’t something you show.",
+  "It’s something you simply are.",
+  "Somewhere between your eyes and your smile,",
+  "the world forgets how fast it was moving.",
+  "You don’t try to be unforgettable.",
+  "And that’s exactly why you are."
+];
+
+let i = 0;
+const text = document.getElementById("text");
+const photo = document.getElementById("photo");
+const end = document.getElementById("end");
+
+function next(){
+    if(i < lines.length){
+        text.style.opacity = 0;
+        setTimeout(()=>{
+            text.innerText = lines[i];
+            text.style.opacity = 1;
+            i++;
+        },500);
+    }
+    else if(photo.style.display === "none"){
+        photo.style.display = "block";
+        photo.style.opacity = 0;
+        setTimeout(()=>photo.style.opacity = 1,100);
+    }
+    else{
+        end.style.opacity = 1;
+    }
+}
+
+// scroll also triggers next
+window.addEventListener("wheel", next);
+
+// auto start
+next();
+</script>
 
 </body>
 </html>
