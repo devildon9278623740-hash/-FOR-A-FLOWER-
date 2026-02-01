@@ -69,6 +69,20 @@ body{
     opacity:0.6;
     font-style:italic;
 }
+
+/* Music button */
+#musicBtn{
+    position:fixed;
+    top:15px;
+    right:15px;
+    background:rgba(255,182,193,0.7);
+    border:none;
+    padding:8px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    z-index:20;
+    font-size:14px;
+}
 </style>
 </head>
 
@@ -78,6 +92,7 @@ body{
 <audio id="music" autoplay loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
+<button id="musicBtn" onclick="toggleMusic()">Pause Music</button>
 
 <!-- Floating petals -->
 <script>
@@ -114,7 +129,7 @@ const text=document.getElementById("text");
 const photo=document.getElementById("photo");
 const end=document.getElementById("end");
 
-// Typing effect
+// Typing effect for each line
 function typeLine(line, callback){
     text.innerText='';
     text.style.opacity=1;
@@ -148,6 +163,14 @@ function nextLine(){
 
 // Start automatically
 window.onload = ()=>nextLine();
+
+// Music toggle
+function toggleMusic(){
+    const music = document.getElementById('music');
+    const btn = document.getElementById('musicBtn');
+    if(music.paused){music.play(); btn.innerText='Pause Music';}
+    else{music.pause(); btn.innerText='Play Music';}
+}
 </script>
 
 </body>
