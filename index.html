@@ -3,77 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For a Flower</title>
-
+<title>For a Flower 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 <style>
-body {
+body{
   margin:0;
   padding:0;
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  text-align:center;
-  background: #000;
-  font-family: Arial, sans-serif;
-  color: #fff;
+  background:#0a0a10;
+  font-family:'Inter', sans-serif;
+  color:#fff;
   overflow:hidden;
+  text-align:center;
 }
 
-.container {
-  max-width: 500px;
-  padding:20px;
-}
-
-h1 {
-  font-size:32px;
-  margin-bottom:18px;
-}
-
-p {
-  font-size:18px;
-  line-height:1.6;
-  margin-bottom:20px;
-}
-
-img {
-  width:120px;
+.petal{
+  position:absolute;
+  width:15px;
+  height:15px;
+  background:rgba(255,182,193,0.7);
   border-radius:50%;
-  margin:auto;
-  display:block;
+  pointer-events:none;
+  animation:fall linear infinite;
 }
 
-#end {
-  margin-top:22px;
+@keyframes fall{
+  0%{transform:translateY(-50px) rotate(0deg);}
+  100%{transform:translateY(110vh) rotate(360deg);}
+}
+
+.main{
+  max-width:500px;
+  padding:30px;
+  z-index:10;
+}
+
+#text{
+  font-family:'Playfair Display', serif;
+  font-size:20px;
+  line-height:1.8;
+  opacity:0;
+  transition:opacity 1s;
+}
+
+#photo{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:25px auto 0;
+  display:none;
+  border:2px solid rgba(255,182,193,0.6);
+}
+
+#gif{
+  width:80px;
+  height:80px;
+  margin:20px auto 0;
+  display:none;
+}
+
+#end{
+  margin-top:25px;
   font-size:12px;
-  opacity:0.7;
+  opacity:0.6;
+  font-style:italic;
+}
+
+#playMusic{
+  position:fixed;
+  top:15px;
+  right:15px;
+  background:rgba(255,182,193,0.7);
+  border:none;
+  padding:8px 12px;
+  border-radius:20px;
+  cursor:pointer;
+  z-index:20;
+  font-size:14px;
 }
 </style>
 </head>
 <body>
 
-<!-- Music autoplay -->
-<audio autoplay loop>
+<!-- Music -->
+<audio id="music" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
+<button id="playMusic">Play Music</button>
 
-<div class="container">
-  <img src="cute.gif" alt="Lovely Animation">
+<!-- Floating petals -->
+<script>
+for(let i=0;i<30;i++){
+    let petal=document.createElement('div');
+    petal.className='petal';
+    petal.style.left=Math.random()*100+'vw';
+    petal.style.animationDuration=(5+Math.random()*5)+'s';
+    petal.style.width=petal.style.height=(10+Math.random()*15)+'px';
+    document.body.appendChild(petal);
+}
+</script>
 
-  <h1>For You, Jasmine 🌸</h1>
-
-  <p>
-    Like a flower waking to the first light,  
-    your beauty shines with a gentle glow.  
-    There’s a softness in your smile,  
-    a warmth in your presence —  
-    and I find myself quietly admiring it all.
-  </p>
-
-  <img src="her.jpg" alt="Her Photo">
-
+<div class="main">
+  <div id="text"></div>
+  <img id="gif" src="sparkle.gif" alt="Sparkle GIF">
+  <img id="photo" src="her.jpg" alt="Her Photo">
   <div id="end">made by HOTOKE for JASMINE</div>
 </div>
+
+<script>
+// Deep dark-flirty Urdu + Hinglish paragraph
+const paragraph = `Khuda ne jab tumhe fursat mein banaya hoga,  
+to shayad khud uski saansen ruk gayi hongi.  
+Teri aankhon mein wo gehra raaz hai,  
+jo raat ke andheron ko bhi sharminda kar de.  
+Teri muskaan mein ek aisa surur hai,  
+ke sitare bhi chupke se uske jaadu mein phas jaate honge.  
+Tere honthon ki ada, teri zulfon ki khushboo,  
+yeh sab mere dil ko is tarah behka dete hain,  
+ke shayad khuda bhi sochta hoga —  
+‘Is rooh ko dharti pe bhejna chahiye ya nahi?’  
+Aur main bas yunhi, khud ko kho kar,  
+teri khubsurti ke har pehlu mein deewana ban jaata hoon.`;
+
+// Typing effect
+const text = document.getElementById("text");
+const photo = document.getElementById("photo");
+const gif = document.getElementById("gif");
+const end = document.getElementById("end");
+
+function typeParagraph(paragraph, callback){
+    text.innerText = '';
+    text.style.opacity = 1;
+    gif.style.display = 'block';
+    let i = 0;
+    const interval = setInterval(()=>{
+        text.innerText += paragraph[i];
+        i++;
+        if(i >= paragraph.length){
+            clearInterval(interval);
+            setTimeout(()=>gif.style.display='none',500);
+            if(callback) callback();
+        }
+    },25);
+}
+
+// Start typing after page loads
+window.onload = ()=>{
+    typeParagraph(paragraph, ()=>{
+        photo.style.display='block';
+        photo.style.opacity=0;
+        setTimeout(()=>photo.style.opacity=1,500);
+        setTimeout(()=>{end.style.opacity=1},800);
+    });
+};
+
+// Music button
+const music = document.getElementById('music');
+document.getElementById('playMusic').addEventListener('click', ()=>{
+    music.play();
+    document.getElementById('playMusic').style.display='none';
+});
+</script>
 
 </body>
 </html>
