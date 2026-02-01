@@ -40,27 +40,33 @@ body{
 .main{
     text-align:center;
     padding:30px;
-    max-width:400px;
+    max-width:500px;
     z-index:10;
 }
 
 #text{
     font-family:'Playfair Display', serif;
-    font-size:22px;
-    line-height:1.5;
-    min-height:80px;
+    font-size:20px;
+    line-height:1.8;
     opacity:0;
     transition:opacity 1s;
 }
 
 #photo{
-    width:130px;
-    height:130px;
+    width:150px;
+    height:150px;
     border-radius:50%;
     object-fit:cover;
     margin:25px auto 0;
     display:none;
     border:2px solid rgba(255,182,193,0.6);
+}
+
+#gif{
+    width:80px;
+    height:80px;
+    margin:20px auto 0;
+    display:none;
 }
 
 #end{
@@ -108,61 +114,47 @@ for(let i=0;i<30;i++){
 
 <div class="main">
     <div id="text"></div>
+    <img id="gif" src="sparkle.gif" alt="Sparkle GIF">
     <img id="photo" src="her.jpg" alt="Her Photo">
     <div id="end">made by HOTOKE for JASMINE</div>
 </div>
 
 <script>
-const lines = [
-  "Like a flower in the morning sun, you glow quietly.",
-  "Your presence is gentle, yet it brightens everything around you.",
-  "No one needs to water your beauty — it blossoms naturally.",
-  "Your smile is the softest petal, unfolding in its own time.",
-  "Even the stars pause to admire you at night.",
-  "You don’t ask for attention, yet you are unforgettable.",
-  "Like petals drifting in a breeze, your charm is effortless.",
-  "I watch quietly, admiring a beauty that feels sacred."
-];
+const paragraph = `Like a flower in the morning sun, you glow quietly. Your presence is gentle, yet it brightens everything around you. No one needs to water your beauty — it blossoms naturally. Your smile is the softest petal, unfolding in its own time. Even the stars pause to admire you at night. You don’t ask for attention, yet you are unforgettable. Like petals drifting in a breeze, your charm is effortless. I watch quietly, admiring a beauty that feels sacred.`;
 
-let i=0;
-const text=document.getElementById("text");
-const photo=document.getElementById("photo");
-const end=document.getElementById("end");
+const text = document.getElementById("text");
+const photo = document.getElementById("photo");
+const gif = document.getElementById("gif");
+const end = document.getElementById("end");
 
-// Typing effect for each line
-function typeLine(line, callback){
-    text.innerText='';
-    text.style.opacity=1;
-    let j=0;
-    const interval=setInterval(()=>{
-        text.innerText += line[j];
-        j++;
-        if(j>=line.length){
+// Typing effect for whole paragraph
+function typeParagraph(paragraph, callback){
+    text.innerText = '';
+    text.style.opacity = 1;
+    gif.style.display = 'block';
+    let i = 0;
+    const interval = setInterval(()=>{
+        text.innerText += paragraph[i];
+        i++;
+        if(i >= paragraph.length){
             clearInterval(interval);
+            setTimeout(()=>gif.style.display='none',500);
             if(callback) callback();
         }
-    },30);
+    },25); // speed of typing
 }
 
-// Auto-play phrases one by one
-function nextLine(){
-    if(i<lines.length){
-        typeLine(lines[i],()=>{
-            i++;
-            setTimeout(nextLine,1500); // wait 1.5s then next line
-        });
-    } else {
-        // Show photo
+// Auto-start
+window.onload = ()=>{
+    typeParagraph(paragraph, ()=>{
+        // Show photo after paragraph
         photo.style.display='block';
         photo.style.opacity=0;
         setTimeout(()=>photo.style.opacity=1,500);
         // Show ending text
         setTimeout(()=>{end.style.opacity=1},800);
-    }
-}
-
-// Start automatically
-window.onload = ()=>nextLine();
+    });
+};
 
 // Music toggle
 function toggleMusic(){
