@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Just Admiring You</title>
+<title>For a Flower</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
@@ -11,33 +11,49 @@
 body{
     margin:0;
     height:100vh;
-    background:#0b0b0f;
+    background:#0a0a10;
     display:flex;
     align-items:center;
     justify-content:center;
     font-family:'Inter', sans-serif;
     color:#f5f5f5;
     overflow:hidden;
+    position:relative;
+}
+
+/* Floating petals */
+.petal{
+    position:absolute;
+    width:15px;
+    height:15px;
+    background:rgba(255,182,193,0.7);
+    border-radius:50%;
+    pointer-events:none;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-50px) rotate(0deg);}
+    100%{transform:translateY(110vh) rotate(360deg);}
 }
 
 .main{
     text-align:center;
     padding:30px;
-    max-width:380px;
-    animation: fade 1.5s ease;
+    max-width:400px;
+    z-index:10;
 }
 
 #text{
     font-family:'Playfair Display', serif;
     font-size:22px;
     line-height:1.5;
-    opacity:0;
-    transition:opacity 1s;
+    min-height:60px;
 }
 
 #photo{
-    width:120px;
-    height:120px;
+    width:130px;
+    height:130px;
     border-radius:50%;
     object-fit:cover;
     margin:25px auto 0;
@@ -48,40 +64,62 @@ body{
 #end{
     margin-top:25px;
     font-size:12px;
-    opacity:0;
+    opacity:0.6;
     font-style:italic;
 }
 
-@keyframes fade{
-    from{opacity:0}
-    to{opacity:1}
+/* Music button */
+#musicBtn{
+    position:fixed;
+    top:15px;
+    right:15px;
+    background:rgba(255,182,193,0.7);
+    border:none;
+    padding:8px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    z-index:20;
+    font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎶 Music -->
-<audio autoplay loop>
+<!-- Music -->
+<audio id="music" autoplay loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
+<button id="musicBtn" onclick="toggleMusic()">Pause Music</button>
+
+<!-- Floating petals -->
+<script>
+for(let i=0;i<30;i++){
+    let petal=document.createElement('div');
+    petal.className='petal';
+    petal.style.left=Math.random()*100+'vw';
+    petal.style.animationDuration=(5+Math.random()*5)+'s';
+    petal.style.width=petal.style.height=(10+Math.random()*15)+'px';
+    document.body.appendChild(petal);
+}
+</script>
 
 <div class="main" onclick="next()">
     <div id="text"></div>
-    <img id="photo" src="her.jpg">
+    <img id="photo" src="her.jpg" alt="Her Photo">
     <div id="end">made by HOTOKE for JASMINE</div>
 </div>
 
 <script>
 const lines = [
-  "I don’t admire you loudly.",
-  "I admire you quietly — the way nights admire stars.",
-  "Your beauty isn’t something you show.",
-  "It’s something you simply are.",
-  "Somewhere between your eyes and your smile,",
-  "the world forgets how fast it was moving.",
-  "You don’t try to be unforgettable.",
-  "And that’s exactly why you are."
+  "Like a flower in the morning sun, you glow quietly.",
+  "Your presence is gentle, yet it brightens everything around you.",
+  "No one needs to water your beauty — it blossoms naturally.",
+  "Your smile is the softest petal, unfolding in its own time.",
+  "Even the stars pause to admire you at night.",
+  "You don’t ask for attention, yet you are unforgettable.",
+  "Like petals drifting in a breeze, your charm is effortless.",
+  "I watch quietly, admiring a beauty that feels sacred."
 ];
 
 let i = 0;
@@ -89,30 +127,45 @@ const text = document.getElementById("text");
 const photo = document.getElementById("photo");
 const end = document.getElementById("end");
 
+// Typing effect
+function typeLine(line, callback){
+    text.innerText='';
+    let j=0;
+    const interval = setInterval(()=>{
+        text.innerText += line[j];
+        j++;
+        if(j>=line.length){
+            clearInterval(interval);
+            if(callback) callback();
+        }
+    },30);
+}
+
 function next(){
-    if(i < lines.length){
-        text.style.opacity = 0;
-        setTimeout(()=>{
-            text.innerText = lines[i];
-            text.style.opacity = 1;
-            i++;
-        },500);
-    }
-    else if(photo.style.display === "none"){
-        photo.style.display = "block";
-        photo.style.opacity = 0;
-        setTimeout(()=>photo.style.opacity = 1,100);
-    }
-    else{
-        end.style.opacity = 1;
+    if(i<lines.length){
+        typeLine(lines[i], ()=>{i++;});
+    } else if(photo.style.display==='none'){
+        photo.style.display='block';
+        photo.style.opacity=0;
+        setTimeout(()=>photo.style.opacity=1,100);
+    } else {
+        end.style.opacity=1;
     }
 }
 
-// scroll also triggers next
+// Scroll also triggers next
 window.addEventListener("wheel", next);
 
-// auto start
+// Auto start first line
 next();
+
+// Music toggle
+function toggleMusic(){
+    const music = document.getElementById('music');
+    const btn = document.getElementById('musicBtn');
+    if(music.paused){music.play(); btn.innerText='Pause Music';}
+    else{music.pause(); btn.innerText='Play Music';}
+}
 </script>
 
 </body>
